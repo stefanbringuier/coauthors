@@ -2,21 +2,19 @@
      please update the URLs accordingly
 
 [![Built Status](https://api.cirrus-ci.com/github/<USER>/coauthors.svg?branch=main)](https://cirrus-ci.com/github/<USER>/coauthors)
-[![ReadTheDocs](https://readthedocs.org/projects/coauthors/badge/?version=latest)](https://coauthors.readthedocs.io/en/stable/)
 [![Coveralls](https://img.shields.io/coveralls/github/<USER>/coauthors/main.svg)](https://coveralls.io/r/<USER>/coauthors)
 [![PyPI-Server](https://img.shields.io/pypi/v/coauthors.svg)](https://pypi.org/project/coauthors/)
 [![Conda-Forge](https://img.shields.io/conda/vn/conda-forge/coauthors.svg)](https://anaconda.org/conda-forge/coauthors)
-[![Monthly Downloads](https://pepy.tech/badge/coauthors/month)](https://pepy.tech/project/coauthors)
 [![Twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&label=Twitter)](https://twitter.com/coauthors)
 -->
 
-[![Project generated with PyScaffold](https://img.shields.io/badge/-PyScaffold-005CA0?logo=pyscaffold)](https://pyscaffold.org/)
+[![ReadTheDocs](https://readthedocs.org/projects/coauthors/badge/?version=latest)](https://coauthors.readthedocs.io/en/stable/) [![Project generated with PyScaffold](https://img.shields.io/badge/-PyScaffold-005CA0?logo=pyscaffold)](https://pyscaffold.org/) [![Monthly Downloads](https://pepy.tech/badge/coauthors/month)](https://pepy.tech/project/coauthors)
 
 # coauthors
 
 > Generate a DataFrame or file of coauthors for proposals.
 
-A longer description of your project goes here...
+This is a small package that uses [scholarly](https://github.com/scholarly-python-package/scholarly) to grab coauthors of papers who have google scholar profiles. It is probably most useful when putting together a list of collaborators for proposal writing.
 
 
 <!-- pyscaffold-notes -->

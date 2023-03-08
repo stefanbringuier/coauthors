@@ -1,5 +1,5 @@
 """
-This is a skeleton file that can serve as a starting point for a Python
+This is a grabfile that can serve as a starting point for a Python
 console script. To run this script uncomment the following lines in the
 ``[options.entry_points]`` section in ``setup.cfg``::
 
@@ -23,6 +23,10 @@ References:
 import argparse
 import logging
 import sys
+from pathlib import Path
+
+import pandas as pd
+from scholarly import ProxyGenerator, scholarly
 
 from coauthors import __version__
 
@@ -33,27 +37,80 @@ __license__ = "MIT"
 _logger = logging.getLogger(__name__)
 
 
+# TODO: Determine if needed
 # ---- Python API ----
 # The functions defined in this section can be imported by users in their
 # Python scripts/interactive interpreter, e.g. via
-# `from coauthors.skeleton import fib`,
+# `from coauthors.grab import ...`,
 # when using this Python module as a library.
 
 
-def fib(n):
-    """Fibonacci example function
+pg = ProxyGenerator()
+success = pg.FreeProxies()
+scholarly.use_proxy(pg)
 
-    Args:
-      n (int): integer
 
-    Returns:
-      int: n-th Fibonacci number
-    """
-    assert n > 0
-    a, b = 1, 1
-    for _i in range(n - 1):
-        a, b = b, a + b
-    return a
+def author_names(query_result):
+    author_options = {}
+    i = 1
+    while True:
+        try:
+            item = next(query_result)
+            author_options[i] = item
+            i += 1
+        except StopIteration:
+            break
+    return author_options
+
+
+def confirm_author_name(author_options):
+    if len(author_options.items()) == 1:
+        selected = 1
+    else:
+        print("Confirm author name")
+        for k, v in author_options.items():
+            name = v["name"]
+            affiliation = v["affiliation"]
+            gid = v["scholar_id"]
+            edomain = v["email_domain"]
+            print(f"{k}: {name}, {affiliation}, {edomain}, scholar id: {gid}")
+        selected = int(input("Entry number id: "))
+
+    return selected
+
+
+def query_author_by_name(name, institute=None):
+    if institute:
+        query = ", ".join(name, institute)
+    else:
+        query = name
+    names = author_names(scholarly.search_author(query))
+    idkey = confirm_author_name(names)
+    return names[idkey]
+
+
+def query_author_by_id(scholar_id):
+    return scholarly.search_author_id(scholar_id)
+
+
+def get_coauthors(author) -> pd.DataFrame:
+    list_of_coauthors = scholarly.fill(author, sections=["coauthors"])
+
+    dfs = []
+    for coauth in list_of_coauthors["coauthors"]:
+        name = coauth["name"]
+        affiliation = coauth["affiliation"]
+        df = pd.DataFrame(data={"Name": [name], "Affiliation": [affiliation]})
+        dfs.append(df)
+
+    return pd.concat(dfs)
+
+
+def save_csv(outfile, author):
+    df: pd.DataFrame = get_coauthors(author)
+    filepath = Path(outfile)
+    filepath.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(filepath, index=False)
 
 
 # ---- CLI ----
@@ -72,13 +129,45 @@ def parse_args(args):
     Returns:
       :obj:`argparse.Namespace`: command line parameters namespace
     """
-    parser = argparse.ArgumentParser(description="Just a Fibonacci demonstration")
+    parser = argparse.ArgumentParser(
+        description="Generate DataFrame of file of coauthors for proposals."
+    )
+    parser.add_argument(
+        "-n",
+        "--name",
+        type=str,
+        help="Author name",
+    )
+    parser.add_argument(
+        "-inst",
+        "--institution",
+        dest="institute",
+        default=None,
+        type=str,
+        help="Authors institution.",
+    )
+    parser.add_argument(
+        "-id",
+        "--google-scholar-id",
+        dest="gid",
+        default=None,
+        type=str,
+        help="Google scholar id. See squence\
+              after scholar.google.com/citations?user=... for id.",
+    )
+    parser.add_argument(
+        "-o",
+        "--output-file",
+        dest="outfile",
+        default="coauthors.csv",
+        type=str,
+        help="Path and name of file for saving coauthors.",
+    )
     parser.add_argument(
         "--version",
         action="version",
         version=f"coauthors {__version__}",
     )
-    parser.add_argument(dest="n", help="n-th Fibonacci number", type=int, metavar="INT")
     parser.add_argument(
         "-v",
         "--verbose",
@@ -121,10 +210,18 @@ def main(args):
           (for example  ``["--verbose", "42"]``).
     """
     args = parse_args(args)
+
     setup_logging(args.loglevel)
-    _logger.debug("Starting crazy calculations...")
-    print(f"The {args.n}-th Fibonacci number is {fib(args.n)}")
-    _logger.info("Script ends here")
+    _logger.debug("Querying google scholar...")
+
+    if args.gid:
+        author = query_author_by_id(args.gid)
+    else:
+        author = query_author_by_name(args.name, institute=args.institute)
+
+    save_csv(args.outfile, author)
+
+    _logger.info("Finished.")
 
 
 def run():
@@ -144,6 +241,6 @@ if __name__ == "__main__":
     # After installing your project with pip, users can also run your Python
     # modules as scripts via the ``-m`` flag, as defined in PEP 338::
     #
-    #     python -m coauthors.skeleton 42
+    #     python -m coauthors.grab
     #
     run()
