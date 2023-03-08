@@ -14,9 +14,16 @@
 
 > Generate a DataFrame or file of coauthors for proposals.
 
-This is a small package that uses [scholarly](https://github.com/scholarly-python-package/scholarly) to grab coauthors of papers who have google scholar profiles. It is probably most useful when putting together a list of collaborators for proposal writing.
+This is a very small package that uses [scholarly](https://github.com/scholarly-python-package/scholarly) to grab coauthors of papers who have google scholar profiles. It is probably most useful when putting together a list of collaborators for proposal writing.
 
 
+## Usage
+
+The intend way to use this package is via the command line. For example:
+
+```shell
+python -m coauthors.grab -n "Stefan Bringuier" -o "my_coauthors.csv"
+```
 <!-- pyscaffold-notes -->
 
 ## Note
