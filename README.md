@@ -9,7 +9,8 @@
 [![Project generated with PyScaffold](https://img.shields.io/badge/-PyScaffold-005CA0?logo=pyscaffold)](https://pyscaffold.org/) [![Monthly Downloads](https://pepy.tech/badge/coauthors/month)](https://pepy.tech/project/coauthors)
 -->
 
-[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://stefanbringuier.github.io/coauthors/stable)
+[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://stefanbringuier.github.io/coauthors) [![gh-pages-deploy](https://github.com/stefanbringuier/coauthors/actions/workflows/gh-pages-deploy.yml/badge.svg)](https://github.com/stefanbringuier/coauthors/actions/workflows/gh-pages-deploy.yml) [![tests](https://github.com/stefanbringuier/coauthors/actions/workflows/ci.yml/badge.svg)](https://github.com/stefanbringuier/coauthors/actions/workflows/ci.yml)
+
 # coauthors
 
 > Generate a DataFrame or file of coauthors for proposals.
