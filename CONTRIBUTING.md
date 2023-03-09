@@ -77,7 +77,7 @@ python3 -m http.server --directory 'docs/_build/html'
 
 ## Code Contributions
 
-The code primarily exist in [grab.py](grab.py). Its is based on usage of
+The code primarily exist in `grab.py`. Its is based on usage of
 [scholarly](https://github.com/scholarly-python-package/scholarly).
 
 ### Submit an issue

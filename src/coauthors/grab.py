@@ -1,25 +1,3 @@
-"""
-This is a grabfile that can serve as a starting point for a Python
-console script. To run this script uncomment the following lines in the
-``[options.entry_points]`` section in ``setup.cfg``::
-
-    console_scripts =
-         fibonacci = coauthors.skeleton:run
-
-Then run ``pip install .`` (or ``pip install -e .`` for editable mode)
-which will install the command ``fibonacci`` inside your current environment.
-
-Besides console scripts, the header (i.e. until ``_logger``...) of this file can
-also be used as template for Python modules.
-
-Note:
-    This file can be renamed depending on your needs or safely removed if not needed.
-
-References:
-    - https://setuptools.pypa.io/en/latest/userguide/entry_point.html
-    - https://pip.pypa.io/en/stable/reference/pip_install
-"""
-
 import argparse
 import logging
 import sys
@@ -37,20 +15,20 @@ __license__ = "MIT"
 _logger = logging.getLogger(__name__)
 
 
-# TODO: Determine if needed
 # ---- Python API ----
 # The functions defined in this section can be imported by users in their
 # Python scripts/interactive interpreter, e.g. via
 # `from coauthors.grab import ...`,
 # when using this Python module as a library.
 
-
+# TODO: Determine if needed
 pg = ProxyGenerator()
 success = pg.FreeProxies()
 scholarly.use_proxy(pg)
 
 
 def author_names(query_result):
+    """Iterate over author(s) from scholarly query."""
     author_options = {}
     i = 1
     while True:
@@ -63,7 +41,15 @@ def author_names(query_result):
     return author_options
 
 
-def confirm_author_name(author_options):
+def confirm_author_name(author_options) -> int:
+    """Provides option to check if query by name is correct.
+
+    Args:
+      author_options (list): list of authors with the queried names.
+
+    Returns:
+      selected (int)
+    """
     if len(author_options.items()) == 1:
         selected = 1
     else:
@@ -80,6 +66,7 @@ def confirm_author_name(author_options):
 
 
 def query_author_by_name(name, institute=None):
+    """Use author name and/or intitute to query."""
     if institute:
         query = ", ".join(name, institute)
     else:
@@ -90,10 +77,12 @@ def query_author_by_name(name, institute=None):
 
 
 def query_author_by_id(scholar_id):
+    """Use google scholar id to query."""
     return scholarly.search_author_id(scholar_id)
 
 
 def get_coauthors(author) -> pd.DataFrame:
+    """Grab the coauthors for a scholarly returned author."""
     list_of_coauthors = scholarly.fill(author, sections=["coauthors"])
 
     dfs = []
@@ -107,6 +96,12 @@ def get_coauthors(author) -> pd.DataFrame:
 
 
 def save_csv(outfile, author):
+    """Save coauthor list to csv file
+
+    Args:
+      outfile (str): path to output file.
+      author (dict): scholarly result for author.
+    """
     df: pd.DataFrame = get_coauthors(author)
     filepath = Path(outfile)
     filepath.parent.mkdir(parents=True, exist_ok=True)
@@ -200,10 +195,8 @@ def setup_logging(loglevel):
 
 
 def main(args):
-    """Wrapper allowing :func:`fib` to be called with string arguments in a CLI fashion
-
-    Instead of returning the value from :func:`fib`, it prints the result to the
-    ``stdout`` in a nicely formatted message.
+    """Wrapper allowing :func:`query_author_by_id` or :func:`query_author_by_name` to
+    be called with string arguments in a CLI fashion.
 
     Args:
       args (List[str]): command line parameters as list of strings
