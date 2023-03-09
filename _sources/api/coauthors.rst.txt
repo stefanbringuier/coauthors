@@ -1,0 +1,21 @@
+coauthors package
+=================
+
+Submodules
+----------
+
+coauthors.grab module
+---------------------
+
+.. automodule:: coauthors.grab
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: coauthors
+   :members:
+   :undoc-members:
+   :show-inheritance:

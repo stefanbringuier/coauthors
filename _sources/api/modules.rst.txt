@@ -1,0 +1,7 @@
+coauthors
+=========
+
+.. toctree::
+   :maxdepth: 4
+
+   coauthors
