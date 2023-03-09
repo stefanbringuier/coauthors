@@ -1,0 +1,17 @@
+name: gh-pages-deploy
+on:
+  push:
+    branches:
+      - main
+jobs:
+  gh-pages-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+      - name: Deploy docs to GitHub Pages
+        uses: Kopfstein/pyscaffold-gh-pages-deploy@latest
